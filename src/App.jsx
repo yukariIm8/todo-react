@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./styles.css";
+import { InputTodo } from "./components/InputTodo";
+import { IncompleteTodos } from "./components/IncompleteTodos";
+import { CompleteTodos } from "./components/CompleteTodos";
 
 export const App = () => {
   const [todoText, setTodoText] = useState("");
@@ -40,41 +43,21 @@ export const App = () => {
 
   return (
     <>
-      <div className="input-area">
-        <input
-          placeholder="Enter todo"
-          value={todoText}
-          onChange={onChangeTodoText}
-        />
-        <button onClick={onClickAdd}>Add</button>
-      </div>
-      <div className="incomplete-area">
-        <p className="title">Tasks</p>
-        <ul>
-          {incompleteTodos.map((todo, index) => {
-            return (
-              <div key={todo} className="list-row">
-                <li>{todo}</li>
-                <button onClick={() => onClickComplete(index)}>Done</button>
-                <button onClick={() => onClickDelete(index)}>Delete</button>
-              </div>
-            );
-          })}
-        </ul>
-      </div>
-      <div className="complete-area">
-        <p className="title">Completed Tasks</p>
-        <ul>
-          {completeTodos.map((todo, index) => {
-            return (
-              <div key={todo} className="list-row">
-                <li>{todo}</li>
-                <button onClick={() => onClickBack(index)}>Back</button>
-              </div>
-            );
-          })}
-        </ul>
-      </div>
+      <InputTodo
+        todoText={todoText}
+        onChange={onChangeTodoText}
+        onClick={onClickAdd}
+        disabled={incompleteTodos.length >= 5}
+      />
+      {incompleteTodos.length >= 5 && (
+        <p style={{ color: "red" }}>You can add todos up to five! </p>
+      )}
+      <IncompleteTodos
+        todos={incompleteTodos}
+        onClickComplete={onClickComplete}
+        onClickDelete={onClickDelete}
+      />
+      <CompleteTodos todos={completeTodos} onClickBack={onClickBack} />
     </>
   );
 };
